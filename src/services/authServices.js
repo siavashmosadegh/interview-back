@@ -1,5 +1,6 @@
-import { findByEmail } from "../repository/authRepository";
-import { hash, sign } from "bcrypt";
+import { findByEmail } from "../repository/authRepository.js";
+import { hash } from "bcrypt";
+import { sign } from "jsonwebtoken";
 
 export const registerService = async (data) => {
 

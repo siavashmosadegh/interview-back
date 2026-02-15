@@ -1,4 +1,4 @@
-import { findByEmail } from "../repository/authRepository.js";
+import { findByEmail, insertUser } from "../repository/authRepository.js";
 import { hash } from "bcrypt";
 import { sign } from "jsonwebtoken";
 
@@ -17,22 +17,40 @@ export const registerService = async (data) => {
 
     // 2. hash password
 
-    const hashedPassword = await hash(password,10);
+    const hashedPassword = await hash(data.password,10);
 
-    // 3. save to db
+    // 3. Prepare data
 
-    const result = await insertUser(data)
+    const userData = {
+        ...data,
+        password, hashedPassword
+    }
+
+    // 4. save user to db
+
+    const user = await insertUser(userData);
     
-    // 4. generate token
+    // 5. generate token
 
-    const token = sign({ id: data.email }, process.env.JWT_SECRET, {
+    const token = sign(
+        { 
+            id: user.id,
+            email: user.email
+        },
+        process.env.JWT_SECRET,
+        {
         expiresIn: '1h'
-    })
+        }
+    )
 
-    // 5. send response
+    // 6. remove password from response
+    delete user.password
 
-    return token;
+    // 7. return
 
-    //const user = await authRepository.createUser(data);
-    //return user;
+
+    return {
+        user,
+        token
+    };
 };

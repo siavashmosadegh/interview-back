@@ -1,6 +1,6 @@
 import { findByEmail, insertUser } from "../repository/authRepository.js";
 import { hash } from "bcrypt";
-import { sign } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 export const registerService = async (data) => {
 
@@ -32,7 +32,7 @@ export const registerService = async (data) => {
     
     // 5. generate token
 
-    const token = sign(
+    const token = jwt.sign(
         { 
             id: user.id,
             email: user.email

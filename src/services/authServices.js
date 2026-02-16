@@ -23,7 +23,7 @@ export const registerService = async (data) => {
 
     const userData = {
         ...data,
-        password, hashedPassword
+        password: hashedPassword
     }
 
     // 4. save user to db
@@ -34,8 +34,8 @@ export const registerService = async (data) => {
 
     const token = jwt.sign(
         { 
-            id: user.id,
-            email: user.email
+            //id: user.id,
+            email: data.email
         },
         process.env.JWT_SECRET,
         {
@@ -44,7 +44,7 @@ export const registerService = async (data) => {
     )
 
     // 6. remove password from response
-    delete user.password
+    //delete user.password
 
     // 7. return
 
